@@ -390,32 +390,27 @@ inline static int isqrt(int x)
     // Render density info into raw RGBA pixels
     i = 0;
     float floatDensity;
-    uint indexOrigin;
+    unsigned char d_r, d_g, d_b, d_a;
+    UIColor *coldColor = [UIColor blueColor];
+    CGFloat hue, saturation, brightness, alpha;
+    [coldColor getHue:&hue saturation:&saturation brightness:&brightness alpha:&alpha];
+    
+    UIColor *bitmapColor;
     for (int y = 0; y < height; y++)
     {
         for (int x = 0; x < width; x++, i++)
         {
-            if (density[i] > 0)
-            {
-                indexOrigin = 4*i;
-                // Normalize density to 0..1
-                floatDensity = (float)density[i] / (float)maxDensity;
-                
-                // Red and alpha component
-                rgba[indexOrigin] = floatDensity * 255;
-                rgba[indexOrigin+3] = rgba[indexOrigin];
-                
-                 // Green component
-                if (floatDensity >= 0.75)
-                    rgba[indexOrigin+1] = rgba[indexOrigin];
-                else if (floatDensity >= 0.5)
-                    rgba[indexOrigin+1] = (floatDensity - 0.5) * 255 * 3;
-               
-                
-                // Blue component
-                if (floatDensity >= 0.8)
-                    rgba[indexOrigin+2] = (floatDensity - 0.8) * 255 * 5;
-            }
+            // Normalize density to 0..1
+            floatDensity = (float)density[i] / (float)maxDensity;
+            
+            bitmapColor = [UIColor colorWithHue:(1.-floatDensity)*hue saturation:saturation brightness:.3*brightness alpha:.6];
+            
+            const CGFloat *components = CGColorGetComponents(bitmapColor.CGColor);
+            
+            rgba[4*i] = components[0]*255;
+            rgba[4*i+1] = components[1]*255;
+            rgba[4*i+2] = components[2]*255;
+            rgba[4*i+3] = components[3]*255;
         }
     }
     
