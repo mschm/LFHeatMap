@@ -112,6 +112,11 @@ UIImage object representing the heatmap for the map region.
 
 ```
 
+## License
+
+LFHeatMap is available under the MIT license. See the LICENSE file for more info.
+
+
 ## LF?
 
 LFHeatMap comes from my work on the (now shut down) LocalFaves framework from [Skyhook Wireless](http://skyhookwireless.com). This component has been open-sourced and formed the basis of a chapter in the [Geolocation in iOS](http://www.amazon.com/Geolocation-iOS-Mobile-Positioning-Mapping/dp/1449308449/ref=sr_1_18?ie=UTF8&qid=undefined&sr=8-18&keywords=corelocation) book.
