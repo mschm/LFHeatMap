@@ -391,9 +391,13 @@ inline static int isqrt(int x)
     i = 0;
     float floatDensity;
     unsigned char d_r, d_g, d_b, d_a;
-    UIColor *coldColor = [UIColor blueColor];
+    
+    UIColor *coldColor = [[UIColor blueColor] colorWithAlphaComponent:.6];
+    
     CGFloat hue, saturation, brightness, alpha;
     [coldColor getHue:&hue saturation:&saturation brightness:&brightness alpha:&alpha];
+    
+    const CGFloat *coldColorComponents = CGColorGetComponents([UIColor colorWithHue:hue saturation:saturation brightness:.3*brightness alpha:alpha].CGColor);
     
     UIColor *bitmapColor;
     for (int y = 0; y < height; y++)
@@ -403,14 +407,23 @@ inline static int isqrt(int x)
             // Normalize density to 0..1
             floatDensity = (float)density[i] / (float)maxDensity;
             
-            bitmapColor = [UIColor colorWithHue:(1.-floatDensity)*hue saturation:saturation brightness:.3*brightness alpha:.6];
+            if (floatDensity > 0.){
+                bitmapColor = [UIColor colorWithHue:(1.-floatDensity)*hue saturation:saturation brightness:.3*brightness alpha:alpha];
             
-            const CGFloat *components = CGColorGetComponents(bitmapColor.CGColor);
+                const CGFloat *components = CGColorGetComponents(bitmapColor.CGColor);
             
-            rgba[4*i] = components[0]*255;
-            rgba[4*i+1] = components[1]*255;
-            rgba[4*i+2] = components[2]*255;
-            rgba[4*i+3] = components[3]*255;
+                rgba[4*i] = components[0]*255;
+                rgba[4*i+1] = components[1]*255;
+                rgba[4*i+2] = components[2]*255;
+                rgba[4*i+3] = components[3]*255;
+                
+            } else {
+                
+                rgba[4*i] = coldColorComponents[0]*255;
+                rgba[4*i+1] = coldColorComponents[1]*255;
+                rgba[4*i+2] = coldColorComponents[2]*255;
+                rgba[4*i+3] = coldColorComponents[3]*255;
+            }
         }
     }
     
